@@ -1,0 +1,2 @@
+# Manipulação de dados
+pandas==3.0.3

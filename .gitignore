@@ -1,0 +1,25 @@
+# Ambiente — nunca versionar o .env real
+.env
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Dados gerados em runtime
+data/raw/
+data/warehouse/*.duckdb
+data/warehouse/*.duckdb.wal
+logs/
+
+# dbt
+transform/target/
+transform/dbt_packages/
+transform/logs/
+
+# Prefect
+.prefect/
+
+# IDE
+.vscode/
+.idea/
+*.swp

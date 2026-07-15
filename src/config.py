@@ -24,5 +24,5 @@ CONFIG = {
 
 
 # Entrada e saída
-ARQUIVO_CSV = r"../dataset/Cleaned_Laptop_data.csv"
-ARQUIVO_PDF = None
+#ARQUIVO_CSV = r"../dataset/Cleaned_Laptop_data.csv"
+#ARQUIVO_PDF = None

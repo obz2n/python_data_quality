@@ -21,3 +21,8 @@ CONFIG = {
     # Porcentagem mínima aceitável de completude por coluna (0–100)
     "completude_minima_pct": 80.0,
 }
+
+
+# Entrada e saída
+ARQUIVO_CSV = r"../dataset/Cleaned_Laptop_data.csv"
+ARQUIVO_PDF = None

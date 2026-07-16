@@ -1,6 +1,7 @@
-
-import pandas as pd
 import numpy as np
+import pandas as pd
+
+from config import CONFIG
 
 
 def avaliar_integridade(df: pd.DataFrame) -> dict:
@@ -8,8 +9,7 @@ def avaliar_integridade(df: pd.DataFrame) -> dict:
 
     # Verifica valores negativos em colunas que deveriam ser positivas
     colunas_num = df.select_dtypes(include=[np.number]).columns
-    palavras_positivas = ["valor", "preco", "preço", "quantidade", "qtd", "qtde",
-                          "total", "age", "idade", "salario", "salário"]
+    palavras_positivas = CONFIG["palavras_positivas"]
     negativos = {}
     for col in colunas_num:
         if any(p in col.lower() for p in palavras_positivas):

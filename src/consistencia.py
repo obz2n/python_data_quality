@@ -1,5 +1,7 @@
 import pandas as pd
+
 from config import CONFIG
+
 
 def avaliar_consistencia(df: pd.DataFrame) -> dict:
     # Duplicatas completas

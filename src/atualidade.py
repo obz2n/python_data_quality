@@ -1,8 +1,8 @@
-
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 from config import CONFIG
+from leitura import tentar_parse_data
 
 
 def avaliar_atualidade(df: pd.DataFrame, colunas_data: list) -> dict:

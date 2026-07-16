@@ -1,5 +1,7 @@
 import pandas as pd
+
 from config import CONFIG
+
 
 def avaliar_completude(df: pd.DataFrame) -> dict:
     total_celulas = df.shape[0] * df.shape[1]

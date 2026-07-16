@@ -1,3 +1,4 @@
+### EM ANDAMENTO
 ### SISTEMA DE QUALIDADE DE DADOS — 6 PILARES
 Pilares avaliados:
 

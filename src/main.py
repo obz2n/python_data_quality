@@ -10,6 +10,12 @@ Uso:
 """
 import argparse
 import json
+import sys
+from pathlib import Path as _Path
+
+# Garante que os módulos em src/ são encontrados ao rodar
+# `python src/main.py` ou `python main.py` de qualquer diretório
+sys.path.insert(0, str(_Path(__file__).parent))
 import logging
 import sqlite3
 from datetime import datetime, timezone

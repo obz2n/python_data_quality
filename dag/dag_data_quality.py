@@ -62,7 +62,7 @@ def _get_config() -> dict:
     direto na UI do Airflow, sem editar a DAG.
     """
     return {
-        "csv_path": Variable.get("dq_csv_path", default_var="/opt/airflow/dataset/Cleaned_Laptop_data.csv"),
+        "csv_path": Variable.get("dq_csv_path", default_var="/opt/airflow/data/Cleaned_Laptop_data.csv"),
         "resultados_dir": Variable.get("dq_resultados_dir", default_var="/opt/airflow/resultados"),
     }
 
@@ -188,6 +188,23 @@ def data_quality_pipeline():
         contexto = get_current_context()
         run_id = contexto["run_id"].replace(":", "-").replace("+", "_")
         caminho_json = destino / f"resultado_{run_id}.json"
+        def _limpar_para_json(obj):
+            """Converte tipos numpy não-serializáveis antes do json.dump."""
+            import numpy as np
+            if isinstance(obj, dict):
+                return {k: _limpar_para_json(v) for k, v in obj.items()}
+            if isinstance(obj, list):
+                return [_limpar_para_json(v) for v in obj]
+            if isinstance(obj, (np.integer,)):
+                return int(obj)
+            if isinstance(obj, (np.floating,)):
+                return float(obj)
+            if isinstance(obj, np.ndarray):
+                return obj.tolist()
+            return obj
+
+        pacote = _limpar_para_json(pacote)
+
         with open(caminho_json, "w", encoding="utf-8") as f:
             json.dump(pacote, f, ensure_ascii=False, indent=2)
 

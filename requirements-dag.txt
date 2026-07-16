@@ -1,0 +1,5 @@
+# Dependências do projeto usadas pelas tasks da DAG
+# NÃO inclua apache-airflow aqui: ele já vem da imagem base
+pandas==3.0.3
+numpy==2.4.6
+pandera==0.32.1

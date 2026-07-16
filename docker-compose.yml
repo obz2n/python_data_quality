@@ -2,19 +2,18 @@
 # docker-compose.yaml — Pipeline de Qualidade de Dados
 # Serviços: postgres (metadata do Airflow) + airflow-init + airflow-webserver +
 # airflow-scheduler + streamlit (dashboard)
-#
 # Uso:
+#   mkdir -p ./dags ./logs ./plugins ./dataset ./resultados
 #   echo "AIRFLOW_UID=$(id -u)" > .env
 #   docker compose up airflow-init
 #   docker compose up -d
-#
 # Airflow UI:    http://localhost:8080  (usuário/senha: airflow / airflow)
 # Streamlit UI:  http://localhost:8501
 
 x-airflow-common: &airflow-common
   build:
     context: .
-    dockerfile: Dockerfile
+    dockerfile: docker/Dockerfile.airflow
   environment: &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
@@ -25,9 +24,9 @@ x-airflow-common: &airflow-common
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
     PYTHONPATH: /opt/airflow/src
   volumes:
-    - ./dags:/opt/airflow/dags
+    - ./dag:/opt/airflow/dags
     - ./src:/opt/airflow/src
-    - ./dataset:/opt/airflow/dataset
+    - ./data:/opt/airflow/data
     - ./resultados:/opt/airflow/resultados
     - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
@@ -57,18 +56,26 @@ services:
     entrypoint: /bin/bash
     command:
       - -c
-      - |
-        airflow db migrate
-        airflow users create \
-          --username airflow \
-          --password airflow \
-          --firstname Data \
-          --lastname Quality \
-          --role Admin \
-          --email admin@example.com
+      - "exec /entrypoint airflow version"
+    # Não chamamos "airflow db migrate" / "airflow users create" diretamente aqui:
+    # o /entrypoint da imagem oficial precisa rodar primeiro porque é ele quem faz
+    # o container reconhecer um UID arbitrário (o do seu host, via AIRFLOW_UID) no
+    # /etc/passwd (o arquivo é group-writable para o grupo 0, por isso o "user:
+    # ${AIRFLOW_UID}:0" do bloco comum é importante). Sem passar por ele, comandos
+    # do airflow quebram com "getpwuid(): uid not found" quando AIRFLOW_UID != 50000
+    # (o uid nativo da imagem). A migração do banco e a criação do usuário abaixo
+    # são feitas pelo próprio /entrypoint, disparadas pelas variáveis
+    # _AIRFLOW_DB_MIGRATE / _AIRFLOW_WWW_USER_CREATE.
     environment:
       <<: *airflow-common-env
       _AIRFLOW_DB_MIGRATE: "true"
+      _AIRFLOW_WWW_USER_CREATE: "true"
+      _AIRFLOW_WWW_USER_USERNAME: airflow
+      _AIRFLOW_WWW_USER_PASSWORD: airflow
+      _AIRFLOW_WWW_USER_FIRSTNAME: Data
+      _AIRFLOW_WWW_USER_LASTNAME: Quality
+      _AIRFLOW_WWW_USER_EMAIL: admin@example.com
+      _AIRFLOW_WWW_USER_ROLE: Admin
 
   airflow-webserver:
     <<: *airflow-common
@@ -105,7 +112,7 @@ services:
   streamlit:
     build:
       context: .
-      dockerfile: Dockerfile.streamlit
+      dockerfile: docker/Dockerfile.streamlit
     ports:
       - "8501:8501"
     volumes:

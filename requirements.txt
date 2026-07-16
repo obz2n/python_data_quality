@@ -1,6 +1,0 @@
-# Manipulação de dados
-pandas==3.0.3
-apache-airflow
-streamlit
-pandera          # ou great-expectations, para validação declarativa
-sqlalchemy       # se for persistir resultados em banco

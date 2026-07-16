@@ -1,0 +1,117 @@
+{
+  "executado_em": "2026-07-16T22:44:56.414377+00:00",
+  "arquivo": "/opt/airflow/data/Cleaned_Laptop_data.csv",
+  "linhas": 896,
+  "colunas": 23,
+  "score_geral": 97.14,
+  "scores_por_pilar": {
+    "completude": 100.0,
+    "consistencia": 93.89,
+    "conformidade": 100,
+    "integridade": 100.0,
+    "precisao": 87.03,
+    "atualidade": 100.0
+  },
+  "detalhes": {
+    "completude": {
+      "score": 100.0,
+      "total_nulos": 0,
+      "total_celulas": 20608,
+      "colunas_criticas": {},
+      "alertas_obrigatorias": []
+    },
+    "consistencia": {
+      "score": 93.89,
+      "duplicatas_completas": 20,
+      "pct_duplicatas": 2.23,
+      "duplicatas_colunas_unicas": {},
+      "tipo_misto": {
+        "display_size": {
+          "numerico": 132,
+          "texto": 368
+        }
+      }
+    },
+    "conformidade": {
+      "score": 100,
+      "colunas_data_analisadas": [],
+      "datas_invalidas": {},
+      "total_datas_invalidas": 0,
+      "total_datas": 0
+    },
+    "integridade": {
+      "score": 100.0,
+      "valores_negativos_suspeitos": {},
+      "strings_vazias": {},
+      "total_problemas": 0
+    },
+    "precisao": {
+      "score": 87.03,
+      "outliers_por_coluna": {
+        "graphic_card_gb": {
+          "outliers": 58,
+          "pct": 6.47,
+          "limite_inf": -3.0,
+          "limite_sup": 5.0,
+          "min": 0.0,
+          "max": 8.0
+        },
+        "warranty": {
+          "outliers": 13,
+          "pct": 1.45,
+          "limite_inf": -1.5,
+          "limite_sup": 2.5,
+          "min": 0.0,
+          "max": 3.0
+        },
+        "latest_price": {
+          "outliers": 58,
+          "pct": 6.47,
+          "limite_inf": -19910.0,
+          "limite_sup": 154490.0,
+          "min": 13990.0,
+          "max": 441990.0
+        },
+        "old_price": {
+          "outliers": 39,
+          "pct": 4.35,
+          "limite_inf": -29178.0,
+          "limite_sup": 195138.0,
+          "min": 0.0,
+          "max": 377798.0
+        },
+        "discount": {
+          "outliers": 2,
+          "pct": 0.22,
+          "limite_inf": -11.5,
+          "limite_sup": 48.5,
+          "min": 0.0,
+          "max": 57.0
+        },
+        "ratings": {
+          "outliers": 149,
+          "pct": 16.63,
+          "limite_inf": -269.25,
+          "limite_sup": 448.75,
+          "min": 0.0,
+          "max": 15279.0
+        },
+        "reviews": {
+          "outliers": 146,
+          "pct": 16.29,
+          "limite_inf": -34.875,
+          "limite_sup": 58.125,
+          "min": 0.0,
+          "max": 1947.0
+        }
+      },
+      "total_outliers": 465,
+      "pct_outliers": 6.49
+    },
+    "atualidade": {
+      "score": 100.0,
+      "analise_por_coluna": {},
+      "limite_dias": 365
+    }
+  }
+}

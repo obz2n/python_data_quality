@@ -1,0 +1,21 @@
+# Imagem oficial do Airflow como base — nunca "pip install apache-airflow" direto
+# em cima de uma imagem genérica, para não quebrar as constraints internas do Airflow.
+FROM apache/airflow:2.9.3-python3.11
+
+USER root
+
+# Dependências de sistema, se precisar (ex: build de libs nativas). Deixe vazio
+# se não precisar de nada além do que a imagem base já tem.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends build-essential \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+USER airflow
+
+# Requisitos do PROJETO (não do Airflow em si) - pandas, numpy etc.
+COPY requirements-dag.txt /requirements-dag.txt
+RUN pip install --no-cache-dir -r /requirements-dag.txt
+
+# Código do projeto disponível no PYTHONPATH do worker/scheduler/webserver
+ENV PYTHONPATH="/opt/airflow/src:${PYTHONPATH}"

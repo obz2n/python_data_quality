@@ -46,5 +46,5 @@ CONFIG = {
 
 # Entrada e saída (caminhos absolutos, resolvidos a partir da raiz do projeto
 # em vez de caminho relativo, para funcionar igual local, via Airflow, etc.)
-ARQUIVO_CSV = BASE_DIR / "dataset" / "Cleaned_Laptop_data.csv"
+ARQUIVO_CSV = BASE_DIR / "data" / "Cleaned_Laptop_data.csv"
 DIR_RESULTADOS = BASE_DIR / "resultados"

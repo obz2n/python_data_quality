@@ -46,5 +46,10 @@ CONFIG = {
 
 # Entrada e saída (caminhos absolutos, resolvidos a partir da raiz do projeto
 # em vez de caminho relativo, para funcionar igual local, via Airflow, etc.)
-ARQUIVO_CSV = BASE_DIR / "data" / "Cleaned_Laptop_data.csv"
+DIR_DATA = BASE_DIR / "data"
 DIR_RESULTADOS = BASE_DIR / "resultados"
+
+# Seleciona automaticamente o CSV mais recente em data/.
+# Use --csv na linha de comando (main.py) para escolher um arquivo específico.
+_csvs_disponiveis = sorted(DIR_DATA.glob("*.csv"), key=lambda p: p.stat().st_mtime, reverse=True)
+ARQUIVO_CSV = _csvs_disponiveis[0] if _csvs_disponiveis else DIR_DATA / "dados.csv"

@@ -1,5 +1,6 @@
 """Dashboard de Qualidade de Dados - lê o SQLite gerado pela DAG do Airflow."""
 import json
+import os
 import sqlite3
 from pathlib import Path
 
@@ -8,7 +9,12 @@ import streamlit as st
 
 st.set_page_config(page_title="Qualidade de Dados", layout="wide")
 
-CAMINHO_DB = Path("/app/resultados/historico_qualidade.db")
+# Resolve o caminho do banco de forma portável:
+#   - Local (venv): app/dashboard.py → parent.parent = raiz do projeto
+#   - Docker:       /app/app/dashboard.py → parent.parent = /app
+# A variável de ambiente DQ_DB_PATH sobrescreve tudo, se definida.
+_default_db = Path(__file__).resolve().parent.parent / "resultados" / "historico_qualidade.db"
+CAMINHO_DB = Path(os.environ.get("DQ_DB_PATH", str(_default_db)))
 
 st.title("📊 Painel de Qualidade de Dados")
 

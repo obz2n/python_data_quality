@@ -11,6 +11,12 @@ data/warehouse/*.duckdb
 data/warehouse/*.duckdb.wal
 logs/
 
+# Arquivos CSV de dados
+data/*.csv
+
+# resultados
+resultados/
+
 # dbt
 transform/target/
 transform/dbt_packages/

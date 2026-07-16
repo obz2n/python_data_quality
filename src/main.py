@@ -23,7 +23,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from config import ARQUIVO_CSV, CONFIG, DIR_RESULTADOS
+from config import ARQUIVO_CSV, CONFIG, DIR_DATA, DIR_RESULTADOS
 from leitura import carregar_csv, detectar_colunas_data
 from completude import avaliar_completude
 from consistencia import avaliar_consistencia
@@ -136,8 +136,18 @@ def salvar_sqlite(pacote: dict, destino: Path) -> Path:
 
 
 def main():
+    csvs_disponiveis = sorted(DIR_DATA.glob("*.csv"), key=lambda p: p.stat().st_mtime, reverse=True)
+    if csvs_disponiveis:
+        lista = ", ".join(p.name for p in csvs_disponiveis)
+        logger.info("CSVs disponíveis em data/: %s", lista)
+        logger.info("Usando por padrão (mais recente): %s", ARQUIVO_CSV.name)
+
     parser = argparse.ArgumentParser(description="Pipeline de qualidade de dados")
-    parser.add_argument("--csv", default=str(ARQUIVO_CSV), help="Caminho do arquivo CSV a avaliar")
+    parser.add_argument(
+        "--csv",
+        default=str(ARQUIVO_CSV),
+        help="Caminho do CSV a avaliar (padrão: mais recente em data/).",
+    )
     parser.add_argument("--saida", default=str(DIR_RESULTADOS), help="Diretório para salvar os resultados")
     args = parser.parse_args()
 

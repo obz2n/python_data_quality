@@ -111,3 +111,9 @@ Contribuições
 
 Licença
 - MIT (ou especifique a licença que preferir).
+
+---
+
+## Autor
+
+[Juliano Laurentino](https://www.linkedin.com/in/julianolaurentinodasilva/)

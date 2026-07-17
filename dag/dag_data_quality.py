@@ -57,12 +57,20 @@ PESOS_SCORE = {
 
 def _get_config() -> dict:
     """
-    Lê caminho do CSV e diretório de resultados a partir de Airflow Variables,
-    com fallback para valores padrão. Assim dá pra trocar o CSV de entrada
-    direto na UI do Airflow, sem editar a DAG.
+    Lê caminho do CSV e diretório de resultados a partir de Airflow Variables.
+    Se `dq_csv_path` não estiver definida, seleciona automaticamente o CSV
+    modificado mais recentemente em `dq_data_dir` (padrão: /opt/airflow/data).
     """
+    data_dir = Path(Variable.get("dq_data_dir", default_var="/opt/airflow/data"))
+
+    csv_path = Variable.get("dq_csv_path", default_var="")
+    if not csv_path:
+        csvs = sorted(data_dir.glob("*.csv"), key=lambda p: p.stat().st_mtime, reverse=True)
+        csv_path = str(csvs[0]) if csvs else str(data_dir / "dados.csv")
+
     return {
-        "csv_path": Variable.get("dq_csv_path", default_var="/opt/airflow/data/Cleaned_Laptop_data.csv"),
+        "csv_path": csv_path,
+        "data_dir": str(data_dir),
         "resultados_dir": Variable.get("dq_resultados_dir", default_var="/opt/airflow/resultados"),
     }
 
@@ -91,9 +99,20 @@ def data_quality_pipeline():
 
         config = _get_config()
         caminho = config["csv_path"]
+        data_dir = Path(config["data_dir"])
+
+        # Lista todos os CSVs disponíveis para facilitar o diagnóstico nos logs
+        csvs_disponiveis = sorted(data_dir.glob("*.csv"), key=lambda p: p.stat().st_mtime, reverse=True)
+        if csvs_disponiveis:
+            logger.info("CSVs disponíveis em %s: %s", data_dir,
+                        ", ".join(p.name for p in csvs_disponiveis))
+        logger.info("CSV selecionado: %s", caminho)
 
         if not Path(caminho).exists():
-            raise AirflowException(f"Arquivo não encontrado: {caminho}")
+            raise AirflowException(
+                f"Arquivo não encontrado: {caminho}. "
+                f"CSVs disponíveis: {[p.name for p in csvs_disponiveis] or 'nenhum'}"
+            )
 
         df = carregar_csv(caminho)
         logger.info("Arquivo validado: %s (%d linhas x %d colunas)", caminho, *df.shape)
